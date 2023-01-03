@@ -5,7 +5,7 @@ import Nav from './Nav';
 import Search from './Search';
 import Repositories from './Repositories';
 
-import { getRepositories } from '../../services/api';
+import { getRepositories, createRepository, destroyRepository } from '../../services/api';
 
 import './styles.css';
 
@@ -16,7 +16,7 @@ const MainPage = () => {
 
   const loadData = async (query = '') => {
     try {
-      const response = await getRepositories();
+      const response = await getRepositories(userId);
       setRepositories(response.data);
       setLoading(false);
     } catch (err) {
@@ -37,12 +37,21 @@ const MainPage = () => {
     console.log('query', query);
   };
 
-  const handleDeleteRepo = (repository) => {
+  const handleDeleteRepo = async (repository) => {
     console.log('delete repo', repository);
+    await destroyRepository(userId, repository._id);
+    await loadData();
   };
 
-  const handleNewRepo = (url) => {
+  const handleNewRepo = async (url) => {
     console.log('new repo', url);
+    try {
+      await createRepository(userId, url);
+      await loadData();
+    } catch (err) {
+      console.error(err);
+      setLoadingError(true);
+    }
   };
 
   if (loadingError) {
