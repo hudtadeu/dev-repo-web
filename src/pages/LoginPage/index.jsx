@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+
+import { AuthContext } from "../../contexts/auth";
 
 import "./styles.cs"
 
 const LoginPage = () => {
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     console.log('email', email);
     console.log('password', password);
-    console.log('login');
+    login(email, password);
   }
 
   return (
   <div id="login">
-    <div className="title">login</div>
+    <h1 className="title">login</h1>
     <div className="form">
       <div className="field">
         <label htmlFor="email">Email:</label>
